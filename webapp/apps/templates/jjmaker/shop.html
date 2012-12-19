@@ -1,0 +1,473 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}Order your Journal{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		#jj_main_body {
+			height:495px;
+		}
+		.jj_promo_wide {
+			width:500px;
+			text-align:center;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	{% ifequal promotion 0 %}
+		<div class="title_main">
+			<div class="title_row">
+				<span class="medium_dark_grey">
+					Ready to order?  Great, we're here to help.  Once you give us your order information, we'll print your book and send it to you.  Expect it within 2 weeks.
+				</span>
+			</div>
+			<hr/>
+			<div id="detail_price_title_row" class="title_row">
+				<div class="column_left">
+					<span id="shop_column_title">
+						Journal title: 
+					</span>
+					<span id="journal_title_display">{{journal_title}}</span><br/>
+					<a href="/jjmaker/review/{{journal_id}}/">Back to my book</a>
+				</div>
+				<div id="price_widget" class="column_right">
+					<div class="full_col_row quantity_view">
+						<span class="label_small quantity_label">Quantity:</span> <input type="text" size="3" name="quantity" id="quantity" value="1" onkeyup="price();" /><div id="price_display" class="label_small price_display">$15.00</div>
+					</div>
+					<div class="full_col_row shipping_view">
+						<div class="left_align_right_col"><span class="label_small">Shipping:</span></div><div id="shipping_display" class="label_small price_display">$5.00</div>
+					</div>
+					<div class="full_col_row tax_view">
+						<div class="left_align_right_col"><span class="label_small">Tax (MA only):</span></div><div id="tax_view" class="label_small price_display">$0.00</div>
+					</div>
+					<div class="full_col_row total_view">
+						<div class="left_align_right_col"><span class="label_small">Total:</span></div><div id="total_view" class="label_small price_display">$20.00</div>
+					</div>
+				</div>
+			</div>
+			<hr/>
+			<form name="cart_form" id="cart_form" action="/jjmaker/thanks/{{journal_id}}/" method="POST">
+			<div id="cart">
+				<div id="cart_col_left" class="cart_col">
+					<table border="0">
+						<tr>
+							<th colspan="2">Shipping and billing info<a title="To gift ship a particular order, enter billing info here and email us about your order at orders@myjotjournal.com.">*</a></th>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">First name:</td><td class="cart_column_form"><input class="required" type="text" name="firstname" id="firstname" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Middle initial:</td><td class="cart_column_form"><input type="text" name="middlename" id="middlename" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Last name:</td><td class="cart_column_form"><input class="required" type="text" name="lastname" id="lastname" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Address 1:</td><td class="cart_column_form"><input class="required" type="text" name="street" id="street" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Address 2:</td><td class="cart_column_form"><input type="text" name="street2" id="street2" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">City:</td><td class="cart_column_form"><input class="required" type="text" name="city" id="city" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">State:</td>
+							<td class="cart_column_form">
+								<select class="required" name="state" id="state" onchange="price()"><option value="XX">None (international)</option> <option value="AL">Alabama</option> <option value="AK">Alaska</option> <option value="AZ">Arizona</option> <option value="AR">Arkansas</option> <option value="CA">California</option> <option value="CO">Colorado</option> <option value="CT">Connecticut</option> <option value="DE">Delaware</option> <option value="FL">Florida</option> <option value="GA">Georgia</option> <option value="HI">Hawaii</option> <option value="ID">Idaho</option> <option value="IL">Illinois</option> <option value="IN">Indiana</option> <option value="IA">Iowa</option> <option value="KS">Kansas</option> <option value="KY">Kentucky</option> <option value="LA">Louisiana</option> <option value="ME">Maine</option> <option value="MD">Maryland</option> <option value="MA">Massachusetts</option> <option value="MI">Michigan</option> <option value="MN">Minnesota</option> <option value="MS">Mississippi</option> <option value="MO">Missouri</option> <option value="MT">Montana</option> <option value="NE">Nebraska</option> <option value="NV">Nevada</option> <option value="NH">New Hampshire</option> <option value="NJ">New Jersey</option> <option value="NM">New Mexico</option> <option value="NY">New York</option> <option value="NC">North Carolina</option> <option value="ND">North Dakota</option> <option value="OH">Ohio</option> <option value="OK">Oklahoma</option> <option value="OR">Oregon</option> <option value="PA">Pennsylvania</option> <option value="RI">Rhode Island</option> <option value="SC">South Carolina</option> <option value="SD">South Dakota</option> <option value="TN">Tennessee</option> <option value="TX">Texas</option> <option value="UT">Utah</option> <option value="VT">Vermont</option> <option value="VA">Virginia</option> <option value="WA">Washington</option> <option value="WV">West Virginia</option> <option value="WI">Wisconsin</option> <option value="WY">Wyoming</option></select>
+							</td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Zip:</td><td class="cart_column_form"><input class="required" type="text" name="zip" id="zip" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Country:</td><td class="cart_column_form"><input onchange="price()" class="required" type="text" name="country" id="country" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="right">Email:</td><td class="cart_column_form"><input class="required" type="text" name="email" id="email" /></td>
+						</tr>
+					</table>
+				</div>
+				<div id="cart_col_right" class="cart_col">
+					<table border="0">
+						<tr>
+							<th colspan="2">Card info (Visa, MC, Discover)</th>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="left">Card number:</td><td class="cart_column_form"><input class="required" type="text" name="ccnum" id="ccnum" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="left">Card type:</td>
+							<td class="cart_column_form">
+								<select class="required" name="cctype" id="cctype"><option>Visa</option><option>MasterCard</option><option>American Express</option><option>Discover</option></select>
+							</td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="left">Card expiration:</td>
+							<td class="cart_column_form">
+								<select class="required" name="ccexp_mo" id="ccexp_mo"><option value='01'>1</option><option value='02'>2</option><option value='03'>3</option><option value='04'>4</option><option value='05'>5</option><option value='06'>6</option><option value='07'>7</option><option value='08'>8</option><option value='09'>9</option><option>10</option><option>11</option><option>12</option></select>&nbsp;<select class="required" name="ccexp_yr" id="ccexp_yr"><option value='10'>2010</option><option value='11'>2011</option><option value='12'>2012</option><option value='13'>2013</option><option value='14'>2014</option><option value='15'>2015</option><option value='16'>2016</option><option value='17'>2017</option><option value='18'>2018</option></select>
+							</td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="left">CSC/CVV2<a onmouseover="showCvv2()">*</a>:</td><td class="cart_column_form"><input class="required" type="text" name="csc" id="csc" size="4" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="left">Phone number:</td><td class="cart_column_form"><input class="required" type="text" name="phone" id="phone" /></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="left">Coupon code:</td><td class="cart_column_form"><input type="text" name="coupon" id="coupon" size="8" style="margin-top:7px;" />&nbsp;<div id="coupon_button" class="order_button" style="font-size:12px;width:60px;float:right;padding:3px;" onclick="calccoupon()">Calculate</div></td>
+						</tr>
+						<tr>
+							<td class="cart_column_label" align="center" colspan="2">
+								<div id="order_button" class="order_button" style="width:150px;" onclick="order()">Order</div>
+								<span id="siteseal"><script type="text/javascript" src=" https://seal.godaddy.com/getSeal?sealID=WgXJmYVJsA5Tpv6PMqf39MdRVNffj61IswIkxQjTzhJB1jbG3y8BA3olykq0"></script><br/><a style="font-family: arial; font-size: 9px" href=" http://www.godaddy.com/gdshop/ssl/ev-ssl.asp" target="_blank">Extended Validation Certificate</a></span>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div id="cvv2" onclick="hideCvv2()" onmouseout="hideCvv2()">
+				<img border="0" src="/static/images/site/cvv2.jpg" />
+			</div>
+			</form>
+		</div>
+	{% else %}
+		<div id="jj_express_body_visible">
+			<div class="thin_margin_auto">
+				<div class="jj_promo_wide">
+					<p class="paypal_express_title">
+						Promotion: free journal.  Enter the following information and submit to receive your free journal.
+					</p>
+					<p id="paypal_express_detail">
+						<form name="cart_form" id="cart_form" action="/jjmaker/thanks/{{journal_id}}/" method="POST">
+							<table border="0">
+								<tr>
+									<td class="cart_column_label" align="right">First name:</td><td class="cart_column_form"><input class="required" type="text" name="firstname" id="firstname" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Middle initial:</td><td class="cart_column_form"><input type="text" name="middlename" id="middlename" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Last name:</td><td class="cart_column_form"><input class="required" type="text" name="lastname" id="lastname" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Address 1:</td><td class="cart_column_form"><input class="required" type="text" name="street" id="street" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Address 2:</td><td class="cart_column_form"><input type="text" name="street2" id="street2" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">City:</td><td class="cart_column_form"><input class="required" type="text" name="city" id="city" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">State:</td>
+									<td class="cart_column_form">
+										<select name="state" id="state"><option value="XX">None (international)</option> <option value="AL">Alabama</option> <option value="AK">Alaska</option> <option value="AZ">Arizona</option> <option value="AR">Arkansas</option> <option value="CA">California</option> <option value="CO">Colorado</option> <option value="CT">Connecticut</option> <option value="DE">Delaware</option> <option value="FL">Florida</option> <option value="GA">Georgia</option> <option value="HI">Hawaii</option> <option value="ID">Idaho</option> <option value="IL">Illinois</option> <option value="IN">Indiana</option> <option value="IA">Iowa</option> <option value="KS">Kansas</option> <option value="KY">Kentucky</option> <option value="LA">Louisiana</option> <option value="ME">Maine</option> <option value="MD">Maryland</option> <option value="MA">Massachusetts</option> <option value="MI">Michigan</option> <option value="MN">Minnesota</option> <option value="MS">Mississippi</option> <option value="MO">Missouri</option> <option value="MT">Montana</option> <option value="NE">Nebraska</option> <option value="NV">Nevada</option> <option value="NH">New Hampshire</option> <option value="NJ">New Jersey</option> <option value="NM">New Mexico</option> <option value="NY">New York</option> <option value="NC">North Carolina</option> <option value="ND">North Dakota</option> <option value="OH">Ohio</option> <option value="OK">Oklahoma</option> <option value="OR">Oregon</option> <option value="PA">Pennsylvania</option> <option value="RI">Rhode Island</option> <option value="SC">South Carolina</option> <option value="SD">South Dakota</option> <option value="TN">Tennessee</option> <option value="TX">Texas</option> <option value="UT">Utah</option> <option value="VT">Vermont</option> <option value="VA">Virginia</option> <option value="WA">Washington</option> <option value="WV">West Virginia</option> <option value="WI">Wisconsin</option> <option value="WY">Wyoming</option></select>
+									</td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Zip:</td><td class="cart_column_form"><input class="required" type="text" name="zip" id="zip" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Country:</td><td class="cart_column_form"><input class="required" type="text" name="country" id="country" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Email:</td><td class="cart_column_form"><input class="required" type="text" name="email" id="email" /></td>
+								</tr>
+								<tr>
+									<td class="cart_column_label" align="right">Phone:</td><td class="cart_column_form"><input class="required" type="text" name="phone" id="phone" /></td>
+								</tr>
+							</table>
+						</form>
+						<div class="order_button" style="width:100px;" onclick="promotion()">
+							Order
+						</div>
+					</p>
+				</div>
+			</div>
+		</div>
+	{% endifequal %}
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script>
+		var coupon_applied = false;
+		function calccoupon()
+		{
+			var code = $("#coupon").val();
+			if (code && !coupon_applied)
+			{
+				jotjournal.ajax(
+					"/jjmaker/apply_coupon/{{journal_id}}/",
+					{
+						'coupon': code
+					},
+					function(XMLHttpRequest, textStatus)
+					{
+						try
+						{
+							var responseObj = JSON.parse(XMLHttpRequest.responseText);
+							if ((textStatus == "success") && responseObj.ctype)
+							{
+								// We're handling two possibilities here: 1) the unit price has been discounted, 2) the total order has been zeroed out
+								var processed = false;
+								var ctype = responseObj.ctype;
+								var amount = parseFloat(responseObj.amount);
+								switch (ctype)
+								{
+									case "po":
+										// remember, just handling the two cases for now FIXME TODO
+										if ((amount == 0) || (amount == 1))
+										{
+											__price = 0;
+											SHIPPING = 0;
+											$("#shipping_display").html("$0.00");
+											$("#ccnum").removeClass("required");
+											$("#csc").removeClass("required");
+										}
+										price();
+										processed = true;
+										break;
+									case "d":
+										__price = __price - amount;
+										price();
+										processed = true;
+										break;
+									default:
+										LOG(0, "Failed to find valid coupon response", responseObj);
+										$("#coupon").val("");
+										break;
+								}
+								if (processed)
+								{
+									coupon_applied = true;
+									$("#coupon").css("color", "green").attr("disabled", "true");
+									$("#coupon_button").css("background-color", "green").html("Applied");
+								}
+							}
+							else
+							{
+								// bad coupon
+								$("#coupon").val("");
+							}
+						}
+						catch (e)
+						{
+							LOG(0, e);
+							$("#coupon").val("");
+						}
+					}
+				);
+			}
+		}
+		function showCvv2()
+		{
+			$("#cvv2").show();
+		}
+		function hideCvv2()
+		{
+			$("#cvv2").hide();
+		}
+
+		var __quantity = 0;
+		function getQty()
+		{
+			if (__quantity > 0) { return __quantity; }
+			var qty = $("#quantity").val();
+			if (isNaN(qty))
+			{
+				qty = 1;
+				$("#quantity").val(1);
+			}
+			return qty;
+		}
+		var __price = 15;
+		function price()
+		{
+			var qty = getQty();
+			$("#price_display").html("$" + (__price * qty) + ".00");
+			total();
+		}
+
+		function returnDollarsCents(num)
+		{
+			var total = "" + num;
+			if (total.indexOf(".") == -1)
+			{
+				total = total + ".00";
+			}
+			else if (total.substring(total.indexOf(".") + 1).length == 1)
+			{
+				total = total + "0";
+			}
+			return total;
+		}
+
+		var __IS_MA = false;
+		function isMa()
+		{
+			if (($("#state").val() == "MA") || (__IS_MA))
+			{
+				return true;
+			}
+			return false;
+		}
+		var US_SHIPPING = 5;
+		var INTERNATIONAL_SHIPPING = 16.35;
+		var SHIPPING = US_SHIPPING;
+		var MA_TAX = 0.0625;
+		function calculateTax(cost)
+		{
+			if (isMa())
+			{
+				var t = Math.round(cost * MA_TAX * 100)/100;
+				LOG(0, "TAX: " + cost + '/' + MA_TAX + '/' + t);
+				$("#tax_view").html("$" + returnDollarsCents(t));
+				return t;
+			}
+			$("#tax_view").html("$0.00");
+			return 0;
+		}
+		function calculateTotal(cost, shipping, tax)
+		{
+			return returnDollarsCents(cost + shipping + tax);
+		}
+		function isInternational()
+		{
+			var c = $("#country").val();
+			var regexUs = /^\s*(u\.?s\.?a?\.?|america|united\s*states)\s*$/im;
+			if (!c || (c.search(regexUs) != -1))
+			{
+				return false;
+			}
+			return true;
+		}
+		function total()
+		{
+			var qty = getQty();
+			var tax = calculateTax(__price * qty);
+			// if a coupon zeroed out the shipping, don't reset it
+			if (SHIPPING != 0)
+			{
+			    // check country: if it is set, but is not USA, U.S.A, America, etc, shipping becomes INTERNATIONAL_SHIPPING
+			    if (isInternational())
+			    {
+				    SHIPPING = INTERNATIONAL_SHIPPING;
+			    }
+			    else
+			    {
+				    SHIPPING = US_SHIPPING;
+			    }
+		    }
+			$("#shipping_display").html("$" + returnDollarsCents(SHIPPING));
+			var total = calculateTotal(__price * qty, SHIPPING, tax);
+			$("#total_view").html("$" + total);
+			return total;
+		}
+
+		var _ordering = false;
+		function order()
+		{
+			// are all the fields there?
+			var requiredFields = $(".required");
+			var valid = true;
+			for (var i = 0, j = requiredFields.length; i < j; i++)
+			{
+				var f = $(requiredFields[i]);
+				if (!f.val())
+				{
+					f.css("background-color", "#ffcccc");
+					valid = false;
+				}
+			}
+			if (valid && !_ordering)
+			{
+				_ordering = true;
+				var qty = $("#quantity").val();
+				if (qty > 0)
+				{
+					var p = qty * __price;
+					jotjournal.ajax(
+						"/jjmaker/checkout/{{journal_id}}/",
+						{
+							'amt': p,
+							'shipping': SHIPPING,
+							'tax': calculateTax(p),
+							'cctype': $("#cctype").val(),
+							'ccnum': $("#ccnum").val(),
+							'ccexp_mo': $("#ccexp_mo").val(),
+							'ccexp_yr': $("#ccexp_yr").val(),
+							'csc': $("#csc").val(),
+							'firstname': $("#firstname").val(),
+							'middlename': $("#middlename").val(),
+							'lastname': $("#lastname").val(),
+							'street': $("#street").val(),
+							'street2': $("#street2").val(),
+							'city': $("#city").val(),
+							'state': $("#state").val(),
+							'zip': $("#zip").val(),
+							'phone': $("#phone").val(),
+							'coupon': $("#coupon").val(),
+							'countrycode': "US", // hack
+							'currencycode': "USD", // hack
+							'email': $("#email").val(),
+							'quantity': qty
+						},
+						function(XMLHttpRequest, textStatus)
+						{
+							var responseObj = JSON.parse(XMLHttpRequest.responseText);
+							if ((textStatus == "success") && responseObj.ticket && (responseObj.ticket.indexOf('FAILURE') == -1))
+							{
+								document.location.href = "/jjmaker/thanks/{{journal_id}}/?ticket=" + responseObj.ticket;
+							}
+							else
+							{
+								alert("Something went wrong when we tried to talk to Paypal, or you entered information we could not verify.  Please reload the page and try again. (Error: PayPalExpress, " + textStatus + ", " + responseObj.ticket + ")");
+							}
+							_ordering = false;
+						}
+					);
+				}
+				else
+				{
+					alert("Must order a quantity of 1 or more to continue");
+					_ordering = false;
+				}
+			}
+		}
+
+		function promotion()
+		{
+			var quantity = 1;
+			jotjournal.ajax(
+				"/jjmaker/promotion_checkout/{{journal_id}}/",
+				{
+					'firstname': $("#firstname").val(),
+					'middlename': $("#middlename").val(),
+					'lastname': $("#lastname").val(),
+					'street': $("#street").val(),
+					'street2': $("#street2").val(),
+					'city': $("#city").val(),
+					'state': $("#state").val(),
+					'zip': $("#zip").val(),
+					'phone': $("#phone").val(),
+					'country': $("#country").val(),
+					'email': $("#email").val(),
+					'quantity': quantity
+				},
+				function(XMLHttpRequest, textStatus)
+				{
+					var responseObj = JSON.parse(XMLHttpRequest.responseText);
+					if ((textStatus == "success") && responseObj.ticket && (responseObj.ticket.indexOf('FAILURE') == -1))
+					{
+						document.location.href = "/jjmaker/thanks/{{journal_id}}/?ticket=" + responseObj.ticket;
+					}
+					else
+					{
+						alert("Something went wrong.  Please reload the page and try again.");
+					}
+				}
+			);
+		}
+	</script>
+{% endblock %}

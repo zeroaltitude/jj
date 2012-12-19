@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta property="og:title" content="JotJournal"/>
+		<meta property="og:type" content="website"/>
+		<meta property="og:url" content="http://www.myjotjournal.com/"/>
+		<meta property="og:image" content="http://www.myjotjournal.com/static/images/site/logo_full.jpg"/>
+		<meta property="og:site_name" content="JotJournal"/>
+		<meta property="fb:app_id" content="{{settings.FACEBOOK_APP_ID}}"/>
+		<meta property="fb:admins" content="lieselp,572816695,zeroaltitude,9133928"/>
+		<meta property="og:description" content="An application for making journals from your Facebook content."/>
+		<title>{% block title %}JotJournal{% endblock %}</title>
+
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link rel='index' title='JotJournal' href='http://www.myjotjournal.com' />
+		<link rel='prev' title='What is JotJournal?' href='http://blog.myjotjournal.com/?page_id=301' />
+		<link rel='canonical' href='http://blog.myjotjournal.com/?page_id=332' />
+		<link rel="stylesheet" href="http://blog.myjotjournal.com/wp-content/themes/jotjournal/style.css" type="text/css" />
+		<link rel="stylesheet" href="http://blog.myjotjournal.com/wp-content/themes/base/css/print.css" type="text/css" media="print" />
+
+		<link type="text/css" rel="stylesheet" href="/static/css/base.css" />
+		<link type="text/css" rel="stylesheet" href="/static/css/ui-lightness/jquery-ui-1.8.11.custom.css" />
+                <style>
+                    #page-wrap {
+	              width:758px !important;
+                    }
+                    #header {
+	              width:758px !important;
+                    }
+                </style>
+                {% block stylesheets %}{% endblock %}
+		{% block headscripts %}{% endblock %}
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-22518046-1']);
+			_gaq.push(['_trackPageview']);
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? ' https://ssl' : ' http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</head>
+	<body class="jjTheme home">
+		<div id="page-wrap">
+			<div id="header">
+				{% block header %}
+				<h1><a href="http://www.myjotjournal.com/">JotJournal</a></h1>
+				<div class="description">Turn your Facebook posts into a book—automatically!</div>
+				<div class="menu-home-menu-container">
+					<ul id="menu-home-menu" class="menu">
+						<li id="menu-item-341" class="first-menu-item menu-item menu-item-type-post_type menu-item-object-page menu-item-341">
+							<a title="About JotJournal" href="http://blog.myjotjournal.com/?page_id=301">About JotJournal</a>
+						</li>
+						<li id="menu-item-342" class="last-menu-item menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-342">
+							<a title="Our Blog" href="http://blog.myjotjournal.com/">Our Blog</a>
+						</li>
+					</ul>
+				</div>
+				{% endblock %}
+			</div>
+			<div id="body_main">
+				{% block body %}
+				
+				{% endblock %}
+				<div id="graphblackout">
+					<div id="graph_label">
+						<span class="blue_text">Use our date slider below to select the date range of your journal.</span>
+					</div>
+					<div id="graph">
+					</div>
+					<div id="graph_slider">
+					</div>
+					<div id="graph_caption">
+						<span class="green_text">Current JotJournal date range:</span> <span id="date_range_string"></span>
+					</div>
+					<div id="graph_continue">
+						<span id="graph_continue_button" class="order_button">Create</span>
+					</div>
+				</div>
+			</div>
+			<div id="footer">
+				{% block footer %}
+				<ul>
+					<li class="first">&copy;2011 JotJournal</li>
+					<li><a href="http://blog.myjotjournal.com/?page_id=223">Contact Us</a></li>
+					<li><a href="http://www.myjotjournal.com/jjmaker/tos/">Privacy and Terms of Service</a></li>
+					<li><a href="http://blog.myjotjournal.com/?page_id=232">Support</a></li>
+				</ul>
+				{% endblock %}
+			</div>
+		</div>
+		<div id="fb-root"></div>
+		<script type="text/javascript">
+			var FACEBOOK_API_KEY = '{{settings.FACEBOOK_API_KEY}}';
+			var FACEBOOK_APP_ID = '{{settings.FACEBOOK_APP_ID}}';
+			function _c()
+			{
+				document.location.href = "/?t=" + new Date().getTime();
+			}
+			function logout(e)
+			{
+				jotjournal.facebook.fbLogout(_c, _c);
+			}
+			function disconnect(e)
+			{
+				var name = "sessionid";
+				var path = "/";
+				var domain = "myjotjournal.com";
+				document.cookie = name + "=" +
+					((path) ? ";path=" + path : "") +
+					((domain) ? ";domain=" + domain : "" ) +
+					";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+				jotjournal.ajax(
+					"/jjmaker/disconnect/",
+					{},
+					function(XMLHttpRequest, textStatus)
+					{
+						jotjournal.facebook.fbDisconnect(_c, _c);
+					}
+				);
+			}
+		</script>
+		{% block the_bitter_beginning %}
+			<script src="http://connect.facebook.net/en_US/all.js"></script>
+		{% endblock %}
+		<!-- script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script -->
+		<script type="text/javascript" src="/static/javascript/jquery-1.5.1.min.js"></script>
+		<script type="text/javascript" src="/static/javascript/jquery-ui-1.8.11.custom.min.js"></script>
+		<script type="text/javascript" src="/static/javascript/json2-min.js"></script>
+		<script type="text/javascript" src="/static/javascript/raphael.js"></script>
+		<script type="text/javascript" src="/static/javascript/jotjournal.js"></script>
+		<script type="text/javascript" src="/static/javascript/jotjournal_facebook.js"></script>
+		<script type="text/javascript" src="/static/javascript/jotjournal_objects.js"></script>
+		<script type="text/javascript" src="/static/javascript/jotjournal_events.js"></script>
+		<script type="text/javascript" src="/static/javascript/jotjournal_commands.js"></script>
+		{% block the_bitter_end %}
+		{% endblock %}
+	</body>
+</html>
+

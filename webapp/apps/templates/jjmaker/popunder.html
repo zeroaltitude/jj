@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<script>
+			var posted = "{{posted}}";
+			if (posted)
+			{
+				window.close();
+			}
+		</script>
+	</head>
+	<body>
+		{% ifequal posted 1 %}
+			Thanks!
+			<script>
+				setTimeout(function(){window.close();}, 3000);
+			</script>
+		{% else %}
+			<form method="POST" action="/jjmaker/popunder/">
+				<p>
+					Help us make JotJournal better by telling us why you are leaving. Select reason(s) below.
+				</p>
+				<p>
+					<input type="checkbox" name="r" value="I don't like the design" />I don't like the design<br/>
+					<input type="checkbox" name="r" value="I want posts from a different time period" />I want posts from a different time period<br/>
+					<input type="checkbox" name="r" value="I want to choose the items to be included from all of my Facebook content" />I want to choose the items to be included from all of my Facebook content<br/>
+					<input type="checkbox" name="r" value="My Facebook stuff just isn't special enough for me to print" />My Facebook stuff just isn't special enough for me to print<br/>
+					<input type="checkbox" name="r" value="I only want my photos, not my status updates" />I only want my photos, not my status updates<br/>
+					<br/>
+					Other:<br/>
+					<textarea cols="20" rows="5" name="lr"></textarea>
+					<br/>
+					<input type="submit" value="Submit" />
+				</p>
+			</form>
+		{% endifequal %}
+	</body>
+</html>

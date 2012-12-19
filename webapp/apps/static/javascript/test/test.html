@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<style>
+			body {
+			    background: #999;
+			}
+			.holder {
+			    -moz-border-radius:10px;
+			    -webkit-border-radius:10px;
+			    -webkit-box-shadow:0 1px 3px #666;
+			    background:#ddd;
+			    width:1900px;
+			    height:800px;
+			}
+		</style>
+		<script>
+			var jotjournal = {};
+			function getDate(id) { return new Date(jotjournal.events.testEvents[Math.floor(id/3)]).toString(); }
+			window.onload = function()
+			{
+				jotjournal.events.calculate();
+				var novelties = jotjournal.events.novelties;
+				for (var i = 0, j = novelties.length; i < j; i++)
+				{
+					for (var k = 0, l = novelties[i].length; k < l; k++)
+					{
+						novelties[i][k] = novelties[i][k] * 250;
+					}
+				}
+				var r = Raphael("holder");
+				function fin()
+				{
+					this.flag = r.g.popup(this.bar.x, this.bar.y, (this.bar.value || "0") + " (" + getDate(this.bar.id) + ")").insertBefore(this);
+				};
+				function fout()
+				{
+					this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+				};
+				var c = r.g.barchart(10, 10, 1900, 800, [novelties[0], novelties[1], novelties[2]]).hover(fin, fout);
+			};
+		</script>
+		<script type="text/javascript" src="../jotjournal_events.js"></script>
+		<script type="text/javascript" src="../jquery-1.4.2.js"></script>
+		<script src="raphael.js" type="text/javascript" charset="utf-8"></script>
+		<script src="g.raphael.js" type="text/javascript" charset="utf-8"></script>
+		<script src="g.bar.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+    <body>
+		<div id="holder" class="holder"></div>
+		<p>
+			Blue: K=10000<br/>
+			Yellow: K=1000<br/>
+			Red: K=100<br/>
+		</p>
+	</body>
+</html>
+

@@ -1,0 +1,4 @@
+#/opt/local/bin/python2.6 ./manage.py sqlreset jjmaker > foo.sql
+python ./manage.py sqlreset jjmaker > foo.sql
+cat foo.sql | mysql -uroot jotjournal
+cat inserts.sql | mysql -uroot jotjournal

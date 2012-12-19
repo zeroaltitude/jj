@@ -1,0 +1,121 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}Create your JotJournal{% endblock %}
+
+{% block body %}
+	<div id="jj_main_landing">
+		<div id="welcome_block" class="block">
+			<div class="block_header header_cyan">
+				Welcome to JotJournal!
+			</div>
+			<div id="learn_body" class="block_body">
+				<div id="learn_left_column">
+					<p class="big_describe_connect">
+						Never lose a moment! Turn your Facebook posts into a book with the click of a button!
+					</p>
+					<span class="describe_connect">Sign in with<br/>Facebook and...</span>
+					<span id="login" class="order_button" style="width:150px;position:relative;font-size:16px;top:-10px;">Show me my book</span>{% if settings.DEVELOPMENT_TAG or settings.STAGING %}<a href="javascript:bestOf();">*</a>{% endif %}
+				</div>
+				<div id="learn_right_column">
+					<img src="/static/images/site/rightbook.png" border="0"/>
+				</div>
+			</div>
+		</div>
+		<br/>
+		<div id="howworks_block" class="block">
+			<div class="block_header header_orange">
+				How does JotJournal Work?
+			</div>
+			<div id="works_body" class="block_body">
+				<div class="works_column">
+					<div id="facebook_icon_works" class="icon_left_float">
+						<img src="/static/images/site/facebook_proper.png" border="0"/>
+					</div>
+					<div class="icon_left_float small_width_column">
+						<span class="blurb_header">Your Facebook content...</span><br/>
+						<span class="blurb_content">We fill your book starting with your most recent posts and going back as far as needed.
+					</div>
+				</div>
+				<div class="works_column">
+					<div id="captured_icon_works" class="icon_left_float">
+						<img src="/static/images/site/capture_drawing_1.jpg" border="0"/>
+					</div>
+					<div class="icon_left_float small_width_column">
+						<span class="blurb_header">Captured in a great looking journal...</span><br/>
+						<span class="blurb_content">We format your book in chronological order and let you remove anything you don’t want. We even show you which posts were most popular!
+					</div>
+				</div>
+				<div class="works_column">
+					<div id="books_icon_works" class="icon_left_float">
+						<img src="/static/images/site/pile_drawing_1.jpg" border="0"/>
+					</div>
+					<div class="icon_left_float small_width_column">
+						<span class="blurb_header">That you can order and keep... each time you fill it.</span><br/>
+						<span class="blurb_content">We’ll print up and send you your JotJournal for <span class="blurb_blue">$15 plus shipping</span>. 
+						Make another one when you’ve got enough stuff to fill a new book. Never lose a moment!
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script type="text/javascript">
+		if (top.location != self.location)
+		{
+			top.location = self.location.href;
+		}
+	</script>
+	<script>
+		/*
+		jotjournal.facebook.registerLoginCallbacks(showDisplay, clearDisplay);
+		*/
+		var suffix = "";
+		function bestOf()
+		{
+			jotjournal.facebook.toggleAggressiveTexts();
+			jotjournal.facebook.toggleClientCulling();
+			$("body").css("background-color", "#3fb");
+			suffix = "?bestof=1";
+		}
+		function clearDisplay(response)
+		{
+			// problem logging in
+			alert("There was a problem logging in.  Please reload the page and try again.");
+		}
+		function showDisplay(response)
+		{
+		    if (!suffix)
+		    {
+		        suffix = '?time=' + new Date().getTime();
+		    }
+            FB.getLoginStatus(function(response)
+            {
+                if (response.status === 'connected')
+                {
+                    var uid = response.authResponse.userID;
+                    var access_token = response.authResponse.accessToken;
+        			jotjournal.setCookie("jj_access_token", access_token);
+        		    if (suffix.indexOf('?') != -1)
+        		    {
+        		        suffix = suffix + "&access_token=" + access_token;
+        		    }
+        		    else
+        		    {
+        		        suffix = suffix + "?access_token=" + access_token;
+        		    }
+                    document.location.href= "/jjmaker/create/" + suffix;
+                }
+                else if (response.status === 'not_authorized')
+                {
+                    LOG(0, 'not authorized');
+                }
+                else
+                {
+                    LOG(0, 'not logged in');
+                }
+            });
+		}
+		$('#login').bind('click', function(e) { jotjournal.facebook.fbLogin(showDisplay, clearDisplay); });
+	</script>
+{% endblock %}

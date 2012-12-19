@@ -1,0 +1,134 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}{{journal_title}}{% endblock %}
+{% block stylesheets %}
+	<link type="text/css" rel="stylesheet" href="/jjmaker/journalstyle/{{journal_id}}/" />
+	<style>
+		#page_holder {
+			position: relative;
+			width:1200px;
+		}
+
+		.page {
+			display:inline-block;
+			margin:4px;
+			border:1px solid black;
+			width:110px;
+			height:110px;
+		}
+
+		.message {
+			font-size: 5px;
+		}
+
+		.hide {
+			display:none;
+		}
+
+		.whitebg {
+			background-color: #ffffff !important;
+		}
+	</style>
+{% endblock %}
+
+{% block headscripts %}
+	<script type="text/javascript">
+		var journalCommands = {{commands|safe}};
+	</script>
+{% endblock %}
+
+{% block header %}
+	<script>
+		function togglePhotos()
+		{
+			$(".photo").toggleClass("hide");
+		}
+
+		function toggleMessages()
+		{
+			$(".message").toggleClass("hide");
+		}
+
+		function toggleBackgrounds()
+		{
+			$(".quadrant").toggleClass("whitebg");
+		}
+
+		var currentPageSize = 110;
+		var currentPageSizeIndex = 2;
+		var pageSizes = [50, 80, 110, 160, 210, 260];
+		var fontSizes = [3, 4, 5, 6, 8, 10];
+		function increasePageSize()
+		{
+			if (currentPageSizeIndex >= 5) { return; }
+			currentPageSizeIndex++;
+			setPageSize();
+		}
+
+		function decreasePageSize()
+		{
+			if (currentPageSizeIndex <= 0) { return; }
+			currentPageSizeIndex--;
+			setPageSize();
+		}
+
+		function setPageSize()
+		{
+			var size = pageSizes[currentPageSizeIndex] + "px";
+			var fontsize = fontSizes[currentPageSizeIndex] + "px";
+			$(".page").css("height", size).css("width", size);
+			$(".message").css("font-size", fontsize);
+		}
+	</script>
+	<a href="javascript:toggleBackgrounds()">Toggle backgrounds</a>, <a href="javascript:togglePhotos()">Toggle images</a>, <a href="javascript:toggleMessages()">Toggle messages</a>, <a href="javascript:increasePageSize()">Bigger</a>, <a href="javascript:decreasePageSize()">Smaller</a>.
+{% endblock %}
+
+{% block body %}
+	<div id="page_holder">
+		<div id="page_1" class="page" title="page 1"></div>
+		<div id="page_2" class="page" title="page 2"></div>
+		<div id="page_3" class="page" title="page 3"></div>
+		<div id="page_4" class="page" title="page 4"></div>
+		<div id="page_5" class="page" title="page 5"></div>
+		<div id="page_6" class="page" title="page 6"></div>
+		<div id="page_7" class="page" title="page 7"></div>
+		<div id="page_8" class="page" title="page 8"></div>
+		<div id="page_9" class="page" title="page 9"></div>
+		<div id="page_10" class="page" title="page 10"></div>
+		<div id="page_11" class="page" title="page 11"></div>
+		<div id="page_12" class="page" title="page 12"></div>
+		<div id="page_13" class="page" title="page 13"></div>
+		<div id="page_14" class="page" title="page 14"></div>
+		<div id="page_15" class="page" title="page 15"></div>
+		<div id="page_16" class="page" title="page 16"></div>
+		<div id="page_17" class="page" title="page 17"></div>
+		<div id="page_18" class="page" title="page 18"></div>
+		<div id="page_19" class="page" title="page 19"></div>
+		<div id="page_20" class="page" title="page 20"></div>
+		<div id="page_21" class="page" title="page 21"></div>
+		<div id="page_22" class="page" title="page 22"></div>
+		<div id="page_23" class="page" title="page 23"></div>
+		<div id="page_24" class="page" title="page 24"></div>
+		<div id="page_25" class="page" title="page 25"></div>
+		<div id="page_26" class="page" title="page 26"></div>
+		<div id="page_27" class="page" title="page 27"></div>
+		<div id="page_28" class="page" title="page 28"></div>
+		<div id="page_29" class="page" title="page 29"></div>
+		<div id="page_30" class="page" title="page 30"></div>
+		<div id="page_31" class="page" title="page 31"></div>
+		<div id="page_32" class="page" title="page 32"></div>
+		<div id="page_33" class="page" title="page 33"></div>
+	</div>
+{% endblock %}
+
+{% block footer %}
+	&nbsp;
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			jotjournal.commands.runCommands(journalCommands);
+		});
+	</script>
+{% endblock %}

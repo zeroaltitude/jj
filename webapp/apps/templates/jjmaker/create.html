@@ -1,0 +1,118 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}Create your Journal{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.ui-widget-header {
+			background:#b9d74b !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+
+	<div id="creating_main">
+		<div id="creating_content_block">
+			<p id="creating_row_1" class="creating_row creating_header">
+				Creating your JotJournal! It can take 2 or 3 minutes for your book to appear, so sit tight and don't click anything.
+			</p>
+			<div id="creating_row_2" class="creating_row">
+				<div id="cr_detail_2" class="cr_detail">
+					<div class="left_float_image"><img border="0" src="/static/images/site/facebook_proper.png" /></div>
+					<p class="progress_notice">Getting information from Facebook...</p>
+				</div>
+			</div>
+			<div id="creating_row_3" class="creating_row">
+				<div id="cr_detail_3" class="cr_detail">
+					<div class="left_float_image"><img border="0" src="/static/images/site/chatty_drawing_1.jpg" /></div>
+					<p class="progress_notice">Assembling photo and status data...</p>
+				</div>
+			</div>
+			<div id="creating_row_4" class="creating_row">
+				<div id="cr_detail_4" class="cr_detail">
+					<div class="left_float_image"><img border="0" src="/static/images/site/camera_drawing_1.jpg" /></div>
+					<p class="progress_notice">Creating journal...</p>
+				</div>
+			</div>
+			<div id="creating_row_5" class="creating_row">
+				<div id="cr_detail_5" class="cr_detail">
+					<div class="left_float_image"><img border="0" src="/static/images/site/gears_drawing_1.jpg" /></div>
+					<p class="progress_notice">All done, moving along...</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script>
+		function no_journal_made(responseObj)
+		{
+			var njm = "<center><p>Whoops! In order to make a JotJournal, you need a good quantity and mix of photos and status updates on Facebook. We couldn't find enough content to make you a great JotJournal. You can add more photos and/or status updates to Facebook immediately and try again by simply returning to www.myjotjournal.com. Or you can add content more slowly and try again in a few weeks or a month. Questions? Email us at  <a href='mailto:help@myjotjournal.com'>help@myjotjournal.com</a>.";
+			if (responseObj && responseObj.exc)
+			{
+				njm = "<center><p>Problem: encountered unexpected error; email jotjournal@myjotjournal.com with journal ID " + responseObj.id + " and detail message: " + responseObj.exc;
+			}
+			$("#creating_content_block").css("padding", "10px").html(njm);
+		}
+		function c1()
+		{
+			$("#creating_row_3").css("display", "block");
+		}
+		function c2()
+		{
+			$("#creating_row_4").css("display", "block");
+		}
+		function c3()
+		{
+			$("#creating_row_5").css("display", "block");
+		}
+		function c4(journal_id)
+		{
+			document.location.href = "/jjmaker/review/" + journal_id + "/";
+		}
+		$(document).ready(function(e)
+		{
+            FB.getLoginStatus(function(response)
+            {
+                jotjournal.setCookie("userprofile_id", response.authResponse.userID);
+                var access_token = response.authResponse.accessToken;
+                if (!jotjournal.getCookie('jj_access_token'))
+                {
+                    jotjournal.setCookie("jj_access_token", access_token);
+                }
+                else
+                {
+                    LOG(0, 'ready create no need to reset cookie', jotjournal.getCookie('jj_access_token'));
+                }
+                LOG(0, 'ready create:', response);
+                if (response.status === 'connected')
+                {
+        			if (document.location.href.indexOf('bestof=1') != -1)
+        			{
+        				jotjournal.facebook.toggleAggressiveTexts();
+        				jotjournal.facebook.toggleClientCulling();
+        				$("body").css("background-color", "#3fb");
+        			}
+        			if (jotjournal.DEVELOPMENT())
+        			{
+        				jotjournal.facebook.gatherJournalAssets(e, c1, c2, c3, c4, jotjournal.facebook.journalToMake, no_journal_made);
+        			}
+        			else
+        			{
+        				jotjournal.facebook.gatherJournalAssets(e, c1, c2, c3, c4, jotjournal.facebook.sendJournal, no_journal_made);
+        			}
+                }
+                else if (response.status === 'not_authorized')
+                {
+                    LOG(0, 'not authorized');
+                }
+                else
+                {
+                    LOG(0, 'not logged in');
+                }
+            });
+		});
+	</script>
+{% endblock %}

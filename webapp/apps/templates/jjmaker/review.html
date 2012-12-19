@@ -1,0 +1,362 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}{{journal_title}}{% endblock %}
+{% block stylesheets %}
+	<link type="text/css" rel="stylesheet" href="/jjmaker/journalstyle/{{journal_id}}/" />
+	<style>
+		#jj_main_body {
+			height:565px;
+		}
+
+		#message_cover_title_centered_text {
+			font-size: 24px;
+		}
+
+		.message {
+			font-size: 12px;
+		}
+
+		.hide {
+			display:none;
+		}
+
+		.title_row {
+			height:50px;
+		}
+
+		#title_row_title {
+			height:50px;
+		}
+
+		#resubmit_button, #order_button {
+			margin:5px 0px 5px 5px;
+		}
+
+		.greyedout {
+			background-color:#999 !important;
+		}
+
+		#cutmark_toggler {
+			position:relative;
+			top:2px;
+			font-size:12px;
+			left:350px;
+			width:200px;
+			height:10px;
+			margin-bottom:3px;
+		}
+		
+		.wide_column {
+			width:280px;
+		}
+	</style>
+{% endblock %}
+
+{% block headscripts %}
+	<script type="text/javascript">
+		var journalCommands = {{commands|safe}};
+	</script>
+{% endblock %}
+
+{% block body %}
+	<div class="title_main">
+		<div class="title_row">
+			<span class="medium_dark_grey">
+				Your most recent Facebook content is now a JotJournal -- check it out!  If you're satisfied,
+				click the order button.  We will then print your book and send it to you.
+			</span>
+		</div>
+		<hr/>
+		<div id="title_row_title" class="title_row">
+			<div class="column_left">
+				<div class="column_title">
+					Journal title: 
+				</div>
+				{% if 1 %}
+					<div class="linedup_title_editor">
+						<input type="text" class="title_editor" id="journal_title_display" value="{{journal_title}}" onblur="saveTitle();"></input><br/>
+						<input type="text" class="title_editor" id="journal_subtitle_display" value="{{journal_subtitle}}" onblur="saveTitle();"></input>
+						<div id="save_button_holder">
+							<span id="title_save_button" class="order_button">Save</span>
+						</div>
+					</div>
+				{% else %}
+					<span id="journal_title_display">{{journal_title}}</span>
+				{% endif %}
+			</div>
+			<div class="column_right wide_column">
+				<div id="order_button" class="order_button right_float_image" onclick="order()">Order</div>
+				<div id="resubmit_button" style="display:none;" class="order_button right_float_image" onclick="resubmit()">Remake</div>
+				<div id="help_aux">
+					(<a class="helphover" onmouseover="showDeleteHelp()" onmouseout="hideDeleteHelp()">What's this?</a>)
+				</div>
+			</div>
+		</div>
+		<hr/>
+		<div id="review_book_row">
+			<div id="previous_holder">
+				<a href="javascript:movePage(-2);">prev</a>
+			</div>
+			<div id="page_holder">
+				<div id="page_0" class="evenpage review_page" title="cover"></div>
+				<div id="page_1" class="oddpage review_page" title="page 1"></div>
+				<div id="page_2" class="evenpage review_page hide" title="page 2"></div>
+				<div id="page_3" class="oddpage review_page hide" title="page 3"></div>
+				<div id="page_4" class="evenpage review_page hide" title="page 4"></div>
+				<div id="page_5" class="oddpage review_page hide" title="page 5"></div>
+				<div id="page_6" class="evenpage review_page hide" title="page 6"></div>
+				<div id="page_7" class="oddpage review_page hide" title="page 7"></div>
+				<div id="page_8" class="evenpage review_page hide" title="page 8"></div>
+				<div id="page_9" class="oddpage review_page hide" title="page 9"></div>
+				<div id="page_10" class="evenpage review_page hide" title="page 10"></div>
+				<div id="page_11" class="oddpage review_page hide" title="page 11"></div>
+				<div id="page_12" class="evenpage review_page hide" title="page 12"></div>
+				<div id="page_13" class="oddpage review_page hide" title="page 13"></div>
+				<div id="page_14" class="evenpage review_page hide" title="page 14"></div>
+				<div id="page_15" class="oddpage review_page hide" title="page 15"></div>
+				<div id="page_16" class="evenpage review_page hide" title="page 16"></div>
+				<div id="page_17" class="oddpage review_page hide" title="page 17"></div>
+				<div id="page_18" class="evenpage review_page hide" title="page 18"></div>
+				<div id="page_19" class="oddpage review_page hide" title="page 19"></div>
+				<div id="page_20" class="evenpage review_page hide" title="page 20"></div>
+				<div id="page_21" class="oddpage review_page hide" title="page 21"></div>
+				<div id="page_22" class="evenpage review_page hide" title="page 22"></div>
+				<div id="page_23" class="oddpage review_page hide" title="page 23"></div>
+				<div id="page_24" class="evenpage review_page hide" title="page 24"></div>
+				<div id="page_25" class="oddpage review_page hide" title="page 25"></div>
+				<div id="page_26" class="evenpage review_page hide" title="page 26"></div>
+				<div id="page_27" class="oddpage review_page hide" title="page 27"></div>
+				<div id="page_28" class="evenpage review_page hide" title="page 28"></div>
+				<div id="page_29" class="oddpage review_page hide" title="page 29"></div>
+				<div id="page_30" class="evenpage review_page hide" title="page 30"></div>
+				<div id="page_31" class="oddpage review_page hide" title="page 31"></div>
+				<div id="page_32" class="evenpage review_page hide" title="page 32"></div>
+				<div id="page_33" class="oddpage review_page hide" title="page 33"></div>
+			</div>
+			<div id="next_holder">
+				<a href="javascript:movePage(2);">next</a>
+			</div>
+		</div>
+		<div id="cutmark_toggler"><a href="javascript:toggleCutmarks()">hide/show x's</a>&nbsp;(<a class="helphover" onmouseover="showDeleteHelp()" onmouseout="hideDeleteHelp()">What's this?</a>)</div>
+		<div id="review_instrux">
+			<span class="medium_dark_grey">If you would like to remove an item from your book, click the corresponding x and remake.</span>
+		</div>
+		<div id="review_jump_row">
+			<span>
+				PAGE:
+				<a href="javascript:jumpTo(0, 1);">1</a> |
+				<a href="javascript:jumpTo(2, 3);">2-3</a> |
+				<a href="javascript:jumpTo(4, 5);">4-5</a> |
+				<a href="javascript:jumpTo(6, 7);">6-7</a> |
+				<a href="javascript:jumpTo(8, 9);">8-9</a> |
+				<a href="javascript:jumpTo(10, 11);">10-11</a> |
+				<a href="javascript:jumpTo(12, 13);">12-13</a> |
+				<a href="javascript:jumpTo(14, 15);">14-15</a> |
+				<a href="javascript:jumpTo(16, 17);">16-17</a> |
+				<a href="javascript:jumpTo(18, 19);">18-19</a> |
+				<a href="javascript:jumpTo(20, 21);">20-21</a> |
+				<a href="javascript:jumpTo(22, 23);">22-23</a> |
+				<a href="javascript:jumpTo(24, 25);">24-25</a> |
+				<a href="javascript:jumpTo(26, 27);">26-27</a> |
+				<a href="javascript:jumpTo(28, 29);">28-29</a> |
+				<a href="javascript:jumpTo(30, 31);">30-31</a> |
+				<a href="javascript:jumpTo(32, 33);">32-33</a>
+			</span>
+		</div>
+	</div>
+
+	<div id="help_text_divalog">
+		<p>
+		Your book has been filled in reverse chronological order, starting with your most recent posts. To delete an item from your book, click on the "x." If you change your mind, click anywhere on the faded out image to restore it. (You are not deleting these items from Facebook, just from your JotJournal.)
+		</p>
+		<p>
+		When you have deleted everything you want, hit "remake." We'll remake your book exactly how we did it the first time, pulling in stuff from your Facebook posts but ignoring the deleted items and replacing them with updates or photos from further back in your Facebook stream. We do this so that every page is filled and there are no blank areas. If you'd like, delete any of the "new" items you don't want, and remake again. You can do this as many times as you want.
+		</p>
+		<p>
+		You may notice that the layout of a particular page will change when you remake your book, for example an item that was on page 4 is now on page 2 because you've deleted some stuff in between. JotJournal is designed to be super easy (while still looking good), so you don't have fine-grained control over the layout of each page. Don't be afraid to just have fun and play around with it a bit. If you decide you just want to go back to the original book, you can do that! Just close out your browser and go back to www.myjotjournal.com.
+		</p>
+	</div>
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script type="text/javascript">
+		var page = 0;
+		var cutsShown = true;
+		function saveTitle()
+		{
+			var title = $("#journal_title_display").val();
+			var subtitle = $("#journal_subtitle_display").val();
+			jotjournal.ajax(
+				"/jjmaker/set_title/{{journal_id}}/",
+				{ title: title, subtitle: subtitle },
+				function(XMLHttpRequest, textStatus)
+				{
+					var responseObj = JSON.parse(XMLHttpRequest.responseText);
+					if (responseObj.status == 'OK')
+					{
+						$("#message_cover_title_centered_text").html(title);
+						$("#message_cover_subtitle_text").html(subtitle);
+						// this bit here is unfortunately sort of lock step with set_itembased_title and format_title, but
+						// that's better than serving UI from the server I think
+						$("#page_1 .message").html(title + "<br/><br/>" + subtitle);
+					}
+				}
+			);
+		}
+		function toggleCutmarks()
+		{
+			if (cutsShown)
+			{
+				$(".cutter").hide();
+			}
+			else
+			{
+				$(".cutter").show();
+			}
+			cutsShown = !cutsShown;
+		}
+		function resubmit()
+		{
+			popupenabled = false;
+			jotjournal.setCookie("title1", $("#journal_title_display").val());
+			jotjournal.setCookie("title2", $("#journal_subtitle_display").val());
+			document.location.href = "/jjmaker/create/";
+		}
+		function order()
+		{
+			popupenabled = false;
+			if ($("#order_button").hasClass("greyedout")) { return; }
+			document.location.href = "{{shop_prefix}}/jjmaker/shop/{{journal_id}}/";
+		}
+		function movePage(delta)
+		{
+			page = page + delta;
+			if (page < 0) { page = 0; }
+			if (page > 32) { page = 32; }
+			jumpTo(page, page + 1);
+		}
+		function jumpTo(page1, page2)
+		{
+			page = page1;
+			$(".review_page").addClass("hide");
+			$("#page_" + page1).removeClass("hide");
+			$("#page_" + page2).removeClass("hide");
+			// check for too-big text areas
+			jotjournal.commands.scanTextSizes(page1, page2);
+		}
+		function uncutThis(e)
+		{
+			//LOG(0, e);
+			var originalTarget = e.srcElement || e.originalTarget || e.target;
+			//LOG(0, "originalTarget is", originalTarget);
+			if (originalTarget.className != "cutter")
+			{
+				//LOG(0, 'running uncutter');
+				var target = $(e.currentTarget);
+				var c = jotjournal.getCookie("cuts");
+				var fid = target.attr('fid');
+				if (c && fid && (c.indexOf(',' + fid) != -1))
+				{
+					//LOG(0, 'uncutting ' + fid);
+					c = c.replace(',' + fid, '');
+					jotjournal.setCookie("cuts", c);
+					target.css("opacity", "1.0");
+					if (c == '')
+					{
+						$("#resubmit_button").css("display", "none");
+						$("#help_aux").css("display", "none");
+						$("#order_button").removeClass("greyedout");
+					}
+				}
+			}
+		}
+		function cutThis(e)
+		{
+			//LOG(0, e);
+			e.bubbles = false;
+			obj = e.currentTarget;
+			var qid = obj.parentNode.id.substring(9);
+			jotjournal.ajax(
+				"/jjmaker/get_fid/{{journal_id}}/" + qid + "/",
+				{},
+				function(XMLHttpRequest, textStatus)
+				{
+					var responseObj = JSON.parse(XMLHttpRequest.responseText);
+					if (responseObj && responseObj.fid)
+					{
+						var c = jotjournal.getCookie("cuts") || "";
+						if (!c || (c.indexOf("," + responseObj.fid) == -1))
+						{
+							jotjournal.setCookie("cuts", "," + responseObj.fid + c);
+							$("#" + obj.parentNode.id).css("opacity", "0.25").attr("fid", responseObj.fid);
+							$("#resubmit_button").css("display", "block");
+							$("#help_aux").css("display", "block");
+							$("#order_button").addClass("greyedout");
+						}
+					}
+				}
+			);
+		}
+		function addCutMarks()
+		{
+			$(".quadrant").live("click", uncutThis);
+			$(".cutter").live("click", cutThis);
+			var quadrants = $(".quadrant");
+			for (var i = 0, j = quadrants.length; i < j; i++)
+			{
+				var q = quadrants[i];
+				// page 1, 2, 3, 10, 11, 18, 19
+				var p = q.parentNode.id.substring(5);
+				if ((p == "0") || (p == "1") || (p == "2") || (p == "10") || (p == "18"))
+				{
+					continue;
+				}
+				$(q).append("<div class='cutter' title='Click to remove this item, then resubmit the JotJournal to see it without the item included.  To undo a cut, click on the faded item.  To wipe all previous cuts and start all over, close the browser and return to myjotjournal.com.'>x</div>");
+				setTimeout(function(){$(".cutter").css("opacity", ".5");}, 500);
+			}
+		}
+		$(document).ready(function()
+		{
+			jotjournal.commands.runCommands(journalCommands);
+			// let there be cuttable items:
+			setTimeout(addCutMarks, 1500);
+			var title = jotjournal.getCookie("title1");
+			var subtitle = jotjournal.getCookie("title2");
+			if (title)
+			{
+				$("#journal_title_display").val(title);
+			}
+			if (subtitle)
+			{
+				$("#journal_subtitle_display").val(subtitle);
+			}
+		});
+		function hideDeleteHelp()
+		{
+			$("#help_text_divalog").hide();
+		}
+		function showDeleteHelp()
+		{
+			$("#help_text_divalog").show();
+		}
+
+		var popunder="/jjmaker/popunder/";
+		var winfeatures="width=600,height=400,scrollbars=1,resizable=1,toolbar=1,location=1,menubar=1,status=1,directories=0";
+		var popupenabled = true;
+		function loadpopunder()
+		{
+			if (popupenabled)
+			{
+				var win2 = window.open(popunder, "", winfeatures);
+				if (win2)
+				{
+					win2.blur();
+				}
+				window.focus();
+			}
+		}
+		$(window).unload(function()
+		{
+			loadpopunder();
+		});
+	</script>
+{% endblock %}

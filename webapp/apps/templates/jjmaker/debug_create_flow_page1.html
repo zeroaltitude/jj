@@ -1,0 +1,94 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}Create your Journal{% endblock %}
+{% block header %}
+	{% if not access_token %}
+		<button class="logged_out" id="login">Login</button>
+	{% else %}
+		<button class="logged_in" id="logout">Logout</button>
+		<button class="logged_in" id="disconnect">Disconnect</button>
+	{% endif %}
+{% endblock %}
+{% block footer %}
+
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		#journal_creation_options p {
+			margin:4px;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div id="journal_creation_options">
+		<p>
+			New!
+		</p>
+		<p id="aggte">
+			<input type="checkbox" CHECKED onclick="jotjournal.facebook.toggleAggressiveTexts();" />&nbsp;Enable aggressive texts (as per Liesel)
+		</p>
+		<p id="omclicu">
+			<input type="checkbox" CHECKED onclick="jotjournal.facebook.toggleClientCulling();" />&nbsp;Omit client side culling (as per Liesel)
+		</p>
+		<p>
+			<select id="templ" onchange="setTemplate();"><option>1</option><option SELECTED>2</option></select>&nbsp;Template
+		</p>
+	</div>
+	<h1>Create a Journal</h1>
+	<div>
+		<div id="userinfo"></div>
+		<div id="loading">Loading...</div>
+		<div class="logged_in" style="display:none;">
+			Hello.  It looks like you've already connected to Facebook.  That's swell.  Click this button
+			to load the photos and text we'll use to create your Journal.
+			<button id="load">Load</button>
+		</div>
+		<div class="logged_out" style="display:none;">
+			Hello.  It looks like you haven't yet connected to Facebook.  Interesting.  Click the login button
+			above to log into Facebook and allow this app.
+		</div>
+	</div>
+	<div id="status_messages">
+		Ready to rock'n'roll.
+	</div>
+	<div id="results_photos">
+
+	</div>
+	<div id="results_texts">
+
+	</div>
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script>
+		function setTemplate()
+		{
+			jotjournal.facebook.setTemplate($("#templ").val());
+		}
+		function clearDisplay(response)
+		{
+			$("#loading").hide();
+			$(".logged_out").show();
+			$(".logged_in").hide();
+			$('#userinfo').hide('fast');
+		}
+		function showDisplay(response)
+		{
+			$("#loading").hide();
+			$(".logged_in").show();
+			$(".logged_out").hide();
+			var user = response[0];
+			$('#userinfo').html('<img src="' + user.pic + '">' + user.name).show('fast');
+		}
+		function sendJournal()
+		{
+			jotjournal.facebook.gatherJournalAssets(null, null, null, null, null, jotjournal.facebook.journalToMake, null);
+		}
+		jotjournal.facebook.registerLoginCallbacks(showDisplay, clearDisplay);
+		$("#load").bind('click', sendJournal);
+		$('#login').bind('click', function(e) { jotjournal.facebook.fbLogin(showDisplay, clearDisplay); });
+		$('#logout').bind('click', function(e) { jotjournal.facebook.fbLogout(clearDisplay, clearDisplay); });
+		$('#disconnect').bind('click', function(e) { jotjournal.facebook.fbDisconnect(clearDisplay, clearDisplay) });
+	</script>
+{% endblock %}

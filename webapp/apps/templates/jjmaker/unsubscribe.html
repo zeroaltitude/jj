@@ -1,0 +1,21 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}Unsubscribe{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+
+	<div id="unsubscribe_main">
+		<p>
+			{{ unsubscribed }}
+		</p>
+		<form method="POST">
+			Unsubscribe: <input type="text" id="email" name="email" title="Email address"/>&nbsp;<input type="submit" value="Unsubscribe" />
+		</form>
+	</div>
+
+{% endblock %}
+
+{% block the_bitter_end %}
+{% endblock %}

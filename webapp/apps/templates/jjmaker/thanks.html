@@ -1,0 +1,154 @@
+{% extends "jjmaker/base.html" %}
+{% block title %}Create your Journal{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		#jj_main_body {
+			{% if promotion %}
+			height:760px;
+			{% else %}
+			height:590px;
+			{% endif %}
+		}
+		#body_main {
+			height:550px;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+
+	<div id="creating_main">
+		<div id="orderthanks_content_block">
+			<p>
+				Thanks!  Your order, order ID {{order_id}}, will be handled as soon as possible.  
+				Contact us at orders@myjotjournal.com with any questions, including order status update requests.  
+				Expect your JotJournal within two weeks.
+				{% if promotion %}
+					<p>After you receive your book, we will send you a short email survey to gather your feedback on the printed book. Questions? Contact us at  help@myjotjournal.com</p>
+					<p>Please answer the short survey below about your experience making a JotJournal. After you hit submit, you can exit the web site and we'll start making your book.</p>
+				{% endif %}
+			</p>
+			{% if not promotion %}
+			<div id="sharing_area">
+				<div id="sharing_holder">
+					<div id="sharing_post" class="block" onclick="showPost()">
+						<div id="post_header_line" class="block_header header_fbblue">
+							Post to your wall
+						</div>
+						<div id="post_body" class="block_body">
+							<div id="post_body_image" class="image_neighbor">
+								<img border="0" src="/static/images/site/facebook_share_post.png" />
+							</div>
+							<div id="post_body_text" class="image_neighbor_text">
+								Let people know what you thought about JotJournal.
+							</div>
+						</div>
+					</div>
+					<div style="float:left;margin-left:10px;">
+						<iframe src=" http://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fjotjournal&amp;width=292&amp;colorscheme=light&amp;show_faces=true&amp;stream=true&amp;header=true&amp;height=427" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:292px; height:427px;" allowTransparency="true"></iframe>
+					</div>
+					<div id="sharing_invite" class="block" onclick="showInvite()" style="position:absolute;top:415px;">
+						<div id="invite_header_line" class="block_header header_fbblue">
+							Invite your friends
+						</div>
+						<div id="invite_body" class="block_body">
+							<div id="invite_body_image" class="image_neighbor">
+								<img border="0" src="/static/images/site/facebook_share_invite.png" />
+							</div>
+							<div id="invite_body_text" class="image_neighbor_text">
+								Invite Facebook friends to JotJournal.
+							</div>
+						</div>
+					</div>
+				</div>
+				{% else %}
+				<div id="survey">
+					<script language="javascript" type="text/javascript" src=" http://www.zoomerang.com/Survey/Embed/WEB22BNDKUZMW3/"></script>
+					<noscript><a href=" http://www.zoomerang.com/">Online Surveys</a></noscript>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+		<div id="sharing_lines" class="big_divalog">
+			<div class="topright_closer" onclick="$('#sharing_lines').hide()">X</div>
+			<div id="sharing_lines_content">
+				<div>
+					<p class="paddedpara">
+						Post this story to your Facebook wall and your friends' home pages:
+					</p>
+				</div>
+				<div>
+					<div class="paddedpara">
+						<table border="0" cellpadding="0" cellspacing="4">
+							<tr>
+								<td valign="top" align="left">
+									<img border="0" src="http://{{app_host}}/jjmaker/journal_1_popimg/{{journal_id}}/image.jpg" width="180" height="135"/>
+								</td>
+								<td valign="top" align="center" width="300">
+									<textarea id="share_message" cols="35" rows="4"></textarea>
+									<div id="share_message_send" onclick="share()">
+										Send
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="invite_lines" class="big_divalog">
+			<div class="topright_closer" onclick="$('#invite_lines').hide()">X</div>
+			<div id="invite_lines_content">
+				<div>
+					<div id="serverfbml">
+						<fb:serverfbml fbml="<fb:request-form action='http://{{app_host}}/jjmaker/thanks/{{journal_id}}/' method='POST' type='try out JotJournal' content='Turn your status updates and photos into a keepsake book with the click of a button. Give JotJournal a try and start keeping your moments! &lt;fb:req-choice url=&quot;http://apps.facebook.com/jotjournal/&quot; label=&quot;Yes&quot; /&gt; &lt;fb:req-choice url=&quot;http://www.facebook.com/&quot; label=&quot;No&quot; /&gt;'><fb:multi-friend-selector actiontext='Invite your friends to join JotJournal.'></fb:multi-friend-selector></fb:request-form>">
+						</fb:serverfbml>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block the_bitter_end %}
+	<script>
+		function showPost()
+		{
+			//FB.ui(
+			//{
+			//	method: 'feed',
+			//	message: '',
+			//	name: 'JotJournal Sharing',
+			//	link: 'http://{{app_host}}/',
+			//	picture: 'http://{{app_host}}/jjmaker/journal_1_popimg/{{journal_id}}/image.jpg'
+			//});
+			$("#sharing_lines").show();
+		}
+
+		function showInvite()
+		{
+			$("#invite_lines").show();
+			FB.XFBML.parse(document.getElementById('serverfbml'));
+		}
+
+		function share()
+		{
+			var message = $("#share_message").val();
+			$("#sharing_lines_content").html("Sharing... one moment...");
+			jotjournal.ajax(
+				"/jjmaker/share/{{journal_id}}/",
+				{ message: message },
+				function(XMLHttpRequest, textStatus)
+				{
+					$("#sharing_lines_content").html("Shared!");
+					$("#sharing_lines").hide();
+				}
+			);
+		}
+
+		// delete any old cuts cookie
+		jotjournal.deleteCookie("cuts");
+	</script>
+{% endblock %}
