@@ -165,8 +165,8 @@ PAYPAL_PASSWORD = ""
 import logging
 import logging.handlers
 
-ROOT_LOG_FILENAME = '/var/log/jotjournal/log.txt'
-SHOP_LOG_FILENAME = '/var/log/jotjournal/shop.txt'
+ROOT_LOG_FILENAME = 'log.txt'
+SHOP_LOG_FILENAME = 'shop.txt'
 
 ROOT_LOGGER = logging.getLogger('RootLogger')
 ROOT_LOGGER.setLevel(logging.DEBUG)

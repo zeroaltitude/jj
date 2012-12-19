@@ -1,0 +1,11 @@
+:tddium:
+ :python:
+   :python_version: 2.7
+   :pip_requirements_file: requirements.txt
+ :tests:
+ - type: custom
+   invocation: single
+   output: exit-status
+   command: python ./webapp/apps/manage.py test jjmaker
+ :mysql:
+   :version: '5.5'
